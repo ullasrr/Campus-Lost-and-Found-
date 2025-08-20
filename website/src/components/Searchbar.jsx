@@ -166,7 +166,7 @@ const Searchbar = () => {
                 <img
                   src={it.image}
                   alt={it.title}
-                  className="h-40 w-full object-cover rounded-md mb-3"
+                  className="h-60 w-full object-cover rounded-md mb-3"
                 />
               )}
 
@@ -246,6 +246,7 @@ const Searchbar = () => {
         onChange={(e)=>setForm({...form,contact:e.target.value})}
         placeholder="Contact"
         className="w-full border p-2 rounded"
+        maxLength={10} pattern="[0-9]{10}"
       />
       <select
         value={form.type}
@@ -264,11 +265,23 @@ const Searchbar = () => {
       />
 
       {(newImage || form.image) && (
+        <div className="flex flex-col items-center space-y-2">
         <img
           src={newImage ? URL.createObjectURL(newImage) : form.image}
           alt="preview"
           className="h-32 w-full object-cover rounded"
         />
+        <Button
+      variant="destructive"
+      onClick={() => {
+        setNewImage(null);
+        setForm({ ...form, image: "" });
+      }}
+      className="px-3 py-2 cursor-pointer"
+    >
+      Remove Image
+    </Button>
+    </div>
       )}
 
       <div className="flex justify-end space-x-2 pt-2">

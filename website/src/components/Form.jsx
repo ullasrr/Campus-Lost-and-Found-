@@ -160,8 +160,10 @@ const Form = () => {
           <input type="text" placeholder="location" name="location" value={formdata.location} onChange={handleChange} 
           className="w-full border border-slate-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-slate-400 bg-white" required/>
 
-          <input type="text" placeholder="Contact" name="contact" value={formdata.contact} onChange={handleChange} 
-          className="w-full border border-slate-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-slate-400 bg-white" required/>
+          <input type="text" placeholder="Contact" name="contact" value={formdata.contact} 
+          onChange={handleChange}
+
+          className="w-full border border-slate-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-slate-400 bg-white" required maxLength={10} pattern="[0-9]{10}"/>
 
           <input type="file" accept="image/*" onChange={handleImageChange} className="border border-slate-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-slate-400 bg-white" />
 
