@@ -4,16 +4,17 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createClient } from '@/utils/supabase/client';
 import '@/components/Searchbar.css';
+
 const supabase = createClient()
 
-const Searchbar = () => {
+const Searchbar = ({ refreshKey }) => {
   const [items,setitems]=useState([])
   const [loading,setloading]=useState(false)
   const [error,seterror]=useState(null)
   const [editing,setediting]=useState(false)
   const [form, setForm]= useState({title: "", description: "", date:"", location:"", contact:"", type:"",image:"" });
-  const [newImage, setNewImage] = useState(null);     
-  const today = new Date().toISOString().split('T')[0];
+  const [newImage, setNewImage] = useState(null);  
+   
 
 
 
@@ -50,7 +51,7 @@ const Searchbar = () => {
       setloading(false)
     }
     fetchItems();
-  }, [search, filter])
+  }, [search, filter, refreshKey])
 
   const handleDelete = async (id) => {
     if (!confirm("Delete this item?")) return;
@@ -90,12 +91,9 @@ const Searchbar = () => {
       .getPublicUrl(fileName);
     imageUrl = urlData.publicUrl;
   }
-  if (!imageUrl) {
-  const { data } = supabase
-    .storage.from('images')
-    .getPublicUrl('images.png');         
-  imageUrl = data.publicUrl;
-}
+  if(!imageUrl){
+            imageUrl="https://tdmwjbmcgnphefdysjao.supabase.co/storage/v1/object/public/images/images.png";
+        }
 
   const { error } = await supabase
     .from("items")
@@ -173,7 +171,7 @@ const Searchbar = () => {
                 <img
                   src={it.image}
                   alt={it.title}
-                  className="h-60 w-full object-cover rounded-md mb-3"
+                  className="h-60 w-full object-cover rounded-md mb-3 border"
                 />
               )}
 
@@ -183,7 +181,7 @@ const Searchbar = () => {
                 {it.title}
               </h3>
               <span
-                className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
+                className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium  ${
                   it.type === "Lost"
                     ? "bg-red-50 text-red-700 border border-red-200"
                     : "bg-emerald-50 text-emerald-700 border border-emerald-200"
@@ -240,7 +238,7 @@ const Searchbar = () => {
         onChange={(e)=>setForm({...form,date:e.target.value})}
         placeholder="Date"
         className="w-full border p-2 rounded"
-        max={today}
+        max={new Date().toISOString().split('T')[0]}
       />
       <input
         value={form.location}
@@ -278,14 +276,14 @@ const Searchbar = () => {
           alt="preview"
           className="h-32 w-full object-cover rounded"
         />
-        <Button
+      <Button
       variant="destructive"
       onClick={() => {
         setNewImage(null);
         setForm({ ...form, image: "" });
       }}
       className="px-3 py-2 cursor-pointer"
-    >
+      >
       Remove Image
     </Button>
     </div>

@@ -10,7 +10,7 @@ const supabase = createClient();
 
 const Form = () => {
     const [showform, setshowform] = useState(false)
-    const today = new Date().toISOString().split('T')[0];
+    const [refreshKey, setRefreshKey] = useState(0);
     
       const [formdata,setformdata]=useState({
         title: "",
@@ -21,10 +21,12 @@ const Form = () => {
         type: ""
       })
       const [image, setImage] = useState(null);
-      const [errors, setErrors] = useState({});
+      const [newErrors, setErrors] = useState({});
+
+      
+      
 
     const validateForm = () => {
-    const newErrors = {};
     
     if (!formdata.title.trim()) newErrors.title = "Title is required";
     if (!formdata.description.trim()) newErrors.description = "Description is required";
@@ -33,8 +35,6 @@ const Form = () => {
     if (!formdata.contact.trim()) newErrors.contact = "Contact is required";
     if (!formdata.type) newErrors.type = "Type is required";
     
-
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -51,9 +51,9 @@ const Form = () => {
         e.preventDefault();
 
         if (!validateForm()) {
-            alert("Please fill in all required fields!");
+            alert("Please fill in all required fields");
             return;
-    }
+        }
 
         let imageUrl=null;
 
@@ -80,10 +80,7 @@ const Form = () => {
             imageUrl=publicUrlData.publicUrl;
         }
         if(!image){
-            const { data } = supabase
-                .storage.from('images')
-                .getPublicUrl('images.png');         
-            imageUrl = data.publicUrl;
+            imageUrl="https://tdmwjbmcgnphefdysjao.supabase.co/storage/v1/object/public/images/images.png";
         }
             const {error}=await supabase
                 .from("items")
@@ -106,9 +103,7 @@ const Form = () => {
                 setformdata({ title: "", description: "", date: "", location: "", contact: "", type: "" });
                 setImage(null);
                 setshowform(false);
-                if (typeof window !== 'undefined') {
-                    window.location.reload();
-                }
+                setRefreshKey(prev => !prev);
             }
         
         }
@@ -124,7 +119,7 @@ const Form = () => {
 
       
       
-    <Searchbar/>
+    <Searchbar refreshKey={refreshKey} />
      
     {showform && (
       <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center transition-all duration-300 ease-in-out">
@@ -150,7 +145,7 @@ const Form = () => {
                 <option value="Found">Found</option>
             </select>
 
-          <input type="date" name="date" value={formdata.date} onChange={handleChange} max={today}
+          <input type="date" name="date" value={formdata.date} onChange={handleChange} max={new Date().toISOString().split('T')[0]}
           className="w-full border border-slate-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-slate-400 bg-white" required/>
 
           <input type="text" placeholder="location" name="location" value={formdata.location} onChange={handleChange} 
