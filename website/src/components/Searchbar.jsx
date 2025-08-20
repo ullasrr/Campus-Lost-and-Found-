@@ -3,6 +3,7 @@ import React, { useState,useEffect } from 'react'
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createClient } from '@/utils/supabase/client';
+import '@/components/Searchbar.css';
 const supabase = createClient()
 
 const Searchbar = () => {
@@ -117,9 +118,9 @@ const Searchbar = () => {
     <div >
         
 
-        <div className='flex justify-between px-20 py-6 bg-gray-100'>
+        <div className='flex flex-col space-y-2 justify-between md:flex-row md:justify-between px-2 py-3 bg-gray-100 md:px-20 md:py-6'>
          <Input type="text" placeholder="Search..." 
-         className="px-4 py-2 border border-gray-300 rounded-lg w-1/2"
+         className="md:px-4 py-2 border border-gray-300 rounded-lg w-1/2"
          value={search}
          onChange={(e) => setsearch(e.target.value)}
          />
@@ -150,7 +151,13 @@ const Searchbar = () => {
 </div>
         {/* List view */}
         <div className="px-8 sm:px-14 lg:px-20 py-6 bg-gray-200 ">
-        {loading && <p className="text-center">Loading…</p>}
+
+        {loading && (
+          <div className="flex justify-center items-center w-full h-full">
+            <span className="loader"></span>
+          </div>
+        )}
+
         {error   && <p className="text-center text-red-600">{error}</p>}
         {!loading && items.length === 0 && (
           <p className="text-center">No items found.</p>

@@ -22,7 +22,6 @@ const Form = () => {
       })
       const [image, setImage] = useState(null);
       const [errors, setErrors] = useState({});
-        const [loading, setloading] = useState(false);
 
     const validateForm = () => {
     const newErrors = {};
@@ -70,7 +69,6 @@ const Form = () => {
 
             if(uploadError){
                 console.error("Upload failed:", uploadError.message);
-                setloading(false);
                 return;
             }
 
@@ -101,7 +99,6 @@ const Form = () => {
 
             if(error){
                 console.error("Error inserting item:", error.message);
-                setloading(false);
                 return;
             }
             else {
@@ -109,7 +106,6 @@ const Form = () => {
                 setformdata({ title: "", description: "", date: "", location: "", contact: "", type: "" });
                 setImage(null);
                 setshowform(false);
-                setloading(false);
                 if (typeof window !== 'undefined') {
                     window.location.reload();
                 }
